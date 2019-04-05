@@ -20,9 +20,10 @@
 ClassImp(RooPyWrapper) 
 
   RooPyWrapper::RooPyWrapper(const char *name, const char *title, 
-                       RooAbsReal& _features) :
+                       RooAbsReal& _features, RooAbsReal& _params) :
   RooAbsReal(name,title), 
-  features("features","features",this,_features)
+  features("features","features",this,_features),
+  params("params","params",this,_params)
  { 
     m_callback=NULL;
  } 
@@ -48,13 +49,15 @@ ClassImp(RooPyWrapper)
   }
 
   // convert member variable features to PyObject
-  PyObject* arg = PyFloat_FromDouble(features.arg().getVal());
+  PyObject* arg1 = PyFloat_FromDouble(features.arg().getVal());
+  PyObject* arg2 = PyFloat_FromDouble(params.arg().getVal());
 
   // callback with argument
-  PyObject* result = PyObject_CallFunctionObjArgs( m_callback, arg , NULL  );
+  PyObject* result = PyObject_CallFunctionObjArgs( m_callback, arg1, arg2 , NULL  );
 
   // decrement reference counter to arg
-  Py_XDECREF( arg );
+  Py_XDECREF( arg1 );
+  Py_XDECREF( arg2 );
 
   // convert result to double
   double ret;

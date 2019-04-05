@@ -26,7 +26,7 @@ typedef _object PyObject;
 class RooPyWrapper : public RooAbsReal{
 public:
   RooPyWrapper() {} ; 
-  RooPyWrapper(const char *name, const char *title, RooAbsReal& _features);
+  RooPyWrapper(const char *name, const char *title, RooAbsReal& _features, RooAbsReal& _param);
   RooPyWrapper(const RooPyWrapper& other, const char* name=0) ;
   virtual TObject* clone(const char* newname) const { return new RooPyWrapper(*this,newname); }
   inline virtual ~RooPyWrapper() { }
@@ -40,6 +40,7 @@ protected:
 
 private:
   RooRealProxy features ;  
+  RooRealProxy params ;  
 
   PyObject* m_callback;
   ClassDef(RooPyWrapper,1); // Your description goes here...
